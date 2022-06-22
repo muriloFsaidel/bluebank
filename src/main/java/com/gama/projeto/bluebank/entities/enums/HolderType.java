@@ -1,4 +1,4 @@
-package com.gama.projeto.bluebank.model;
+package com.gama.projeto.bluebank.entities.enums;
 
 import lombok.Getter;
 

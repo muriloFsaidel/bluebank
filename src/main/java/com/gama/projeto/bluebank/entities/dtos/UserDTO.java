@@ -1,35 +1,32 @@
-package com.gama.projeto.bluebank.model.dto;
+package com.gama.projeto.bluebank.entities.dtos;
 
-import com.gama.projeto.bluebank.model.BankAccount;
-import com.gama.projeto.bluebank.model.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.gama.projeto.bluebank.entities.BankAccount;
+import com.gama.projeto.bluebank.entities.User;
+import lombok.*;
 import org.springframework.data.domain.Page;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Getter
+@Data
 @Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(builderClassName = "Builder")
 public class UserDTO implements Serializable {
 
     @NotNull(message = "id cannot be null.")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
-    @NotNull(message = "specificID cannot be null.")
-    private String specificID;
 
     @NotNull(message = "Name cannot be null.")
     @Size(min = 2, max = 50, message = "Name must be between 2 and 50 characters.")
@@ -37,7 +34,6 @@ public class UserDTO implements Serializable {
 
     @NotNull(message = "Age cannot be null.")
     @Min(value = 13, message = "Your age must be higher or equal to 13 to use our services.")
-    @Size(min = 2, max = 2, message = "Age must be between 2 and 2 characters.")
     private int age;
 
     @NotNull
@@ -48,14 +44,13 @@ public class UserDTO implements Serializable {
     @Email(message = "This email is not valid, please enter a valid email.")
     private String email;
 
-    @NotNull(message = "account cannot be null, the values are MALE, FEMALE or UNDEFINED")
+    @NotNull(message = "account cannot be null")
     private BankAccount account;
 
     public static UserDTO from(User entity) {
         return UserDTO
                 .builder()
                 .id(entity.getId())
-                .specificID(UUID.randomUUID().toString())
                 .name(entity.getName())
                 .age(entity.getAge())
                 .phone(entity.getPhone())
@@ -71,4 +66,5 @@ public class UserDTO implements Serializable {
     public static Page<UserDTO> fromPage(Page<User> pages) {
         return pages.map(UserDTO::from);
     }
+
 }
